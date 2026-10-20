@@ -6,7 +6,7 @@ import { Scallop } from "./Scallop";
 import { useKasteel } from "@/lib/store";
 
 export function Gate() {
-  const { unlock, status } = useKasteel();
+  const { unlock, status, lastError } = useKasteel();
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -17,7 +17,7 @@ export function Gate() {
     setBusy(true);
     setError("");
     const ok = await unlock(code.trim());
-    if (!ok) setError("Die code klopt niet. Probeer het nog eens.");
+    if (!ok) setError("__pending__");
     setBusy(false);
   }
 
@@ -87,7 +87,7 @@ export function Gate() {
             />
             {error && (
               <p id="code-error" role="alert" className="mt-3 text-sm font-semibold text-[#a3201a]">
-                {error}
+                {lastError || "Die code klopt niet. Probeer het nog eens."}
               </p>
             )}
             <motion.button

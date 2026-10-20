@@ -24,6 +24,7 @@ type MemberInput = Partial<Member> & { name: string };
 type Ctx = {
   status: Status;
   loading: boolean;
+  lastError: string;
   members: Member[];
   categories: Category[];
   tasks: Task[];
@@ -48,6 +49,7 @@ const CODE_KEY = "kt-code";
 export function KasteelProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<Status>("checking");
   const [loading, setLoading] = useState(false);
+  const [lastError, setLastError] = useState("");
   const [members, setMembers] = useState<Member[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -75,10 +77,15 @@ export function KasteelProvider({ children }: { children: ReactNode }) {
 
   const open = useCallback(
     async (code: string): Promise<boolean> => {
+      setLastError("");
       try {
         const sb = makeClient(code);
         const { data, error } = await sb.rpc("kt_ping");
-        if (error || data !== true) return false;
+        if (error) {
+          setLastError(`Verbinding met de database mislukt: ${error.message}`);
+          return false;
+        }
+        if (data !== true) return false;
         clientRef.current = sb;
         try {
           localStorage.setItem(CODE_KEY, code);
@@ -86,7 +93,8 @@ export function KasteelProvider({ children }: { children: ReactNode }) {
         setStatus("open");
         await reload();
         return true;
-      } catch {
+      } catch (e) {
+        setLastError(e instanceof Error ? e.message : "Onbekende fout bij verbinden.");
         return false;
       }
     },
@@ -139,6 +147,7 @@ export function KasteelProvider({ children }: { children: ReactNode }) {
     return {
       status,
       loading,
+      lastError,
       members,
       categories,
       tasks,
@@ -169,7 +178,7 @@ export function KasteelProvider({ children }: { children: ReactNode }) {
         run((sb) => (m.id ? sb.from("kt_members").update(m).eq("id", m.id) : sb.from("kt_members").insert(m))),
       removeMember: (id) => run((sb) => sb.from("kt_members").delete().eq("id", id)),
     };
-  }, [status, loading, members, categories, tasks, completions, open, lock, reload, run]);
+  }, [status, loading, lastError, members, categories, tasks, completions, open, lock, reload, run]);
 
   return <KasteelContext.Provider value={value}>{children}</KasteelContext.Provider>;
 }
