@@ -87,9 +87,6 @@ export function KasteelProvider({ children }: { children: ReactNode }) {
         }
         if (data !== true) return false;
         clientRef.current = sb;
-        try {
-          localStorage.setItem(CODE_KEY, code);
-        } catch {}
         setStatus("open");
         await reload();
         return true;
@@ -102,15 +99,11 @@ export function KasteelProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    let saved: string | null = null;
+    // Geen huiscode meer: de app opent direct.
     try {
-      saved = localStorage.getItem(CODE_KEY);
+      localStorage.removeItem(CODE_KEY);
     } catch {}
-    if (!saved) {
-      setStatus("locked");
-      return;
-    }
-    open(saved).then((ok) => {
+    open("open").then((ok) => {
       if (!ok) setStatus("locked");
     });
   }, [open]);

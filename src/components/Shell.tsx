@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, ListChecks, LogOut, Users } from "lucide-react";
+import { CalendarDays, ListChecks, Users } from "lucide-react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -16,7 +16,7 @@ const NAV = [
 ];
 
 function Frame({ children }: { children: ReactNode }) {
-  const { status, lock } = useKasteel();
+  const { status } = useKasteel();
   const pathname = usePathname();
 
   if (status !== "open") return <Gate />;
@@ -30,15 +30,7 @@ function Frame({ children }: { children: ReactNode }) {
           </span>
           Het Kasteeltje
         </Link>
-        <button
-          type="button"
-          onClick={lock}
-          className="inline-flex items-center gap-2 rounded-full bg-paper px-4 py-2 text-sm font-semibold ring-1 ring-ink/15 transition hover:bg-white"
-        >
-          <LogOut size={16} aria-hidden="true" />
-          Vergrendel
-        </button>
-      </header>
+</header>
 
       <AnimatePresence mode="wait">
         <motion.main
