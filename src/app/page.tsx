@@ -80,7 +80,7 @@ export default function AgendaPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <div className="relative overflow-hidden rounded-[2.2rem] bg-sun p-7 sm:p-10">
           <p className="text-sm font-semibold tracking-wide uppercase">
             {format(today, "EEEE d MMMM", { locale: nl })}
@@ -144,7 +144,7 @@ export default function AgendaPage() {
         </div>
 
         {view === "agenda" ? (
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center gap-2 sm:w-auto">
             <button
               type="button"
               aria-label="Vorige maand"
@@ -156,7 +156,7 @@ export default function AgendaPage() {
             <AnimatePresence mode="wait">
               <motion.h2
                 key={format(month, "yyyy-MM")}
-                className="min-w-40 text-center text-2xl font-bold capitalize"
+                className="min-w-0 flex-1 text-center text-xl font-bold whitespace-nowrap capitalize sm:min-w-40 sm:flex-none sm:text-2xl"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -180,7 +180,7 @@ export default function AgendaPage() {
                 setMonth(startOfMonth(new Date()));
                 setSelected(todayISO);
               }}
-              className="ml-1 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-cream"
+              className="rounded-full bg-ink px-4 py-3 text-sm font-semibold text-cream sm:ml-1 sm:px-5"
             >
               Vandaag
             </button>
@@ -208,19 +208,19 @@ export default function AgendaPage() {
         {view === "agenda" ? (
           <motion.section
             key="agenda"
-            className="mt-6 grid gap-6 lg:grid-cols-[1.6fr_1fr]"
+            className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.22 }}
           >
             <div className="rounded-[2.2rem] bg-paper p-3 ring-1 ring-ink/10 sm:p-5">
-              <div className="grid grid-cols-7 pb-2 text-center text-xs font-semibold tracking-wide uppercase opacity-60">
+              <div className="grid grid-cols-[repeat(7,minmax(0,1fr))] pb-2 text-center text-xs font-semibold tracking-wide uppercase opacity-60">
                 {weekdayHeads.map((d) => (
                   <span key={d}>{d}</span>
                 ))}
               </div>
-              <div className="grid grid-cols-7 gap-1 sm:gap-1.5" role="grid" aria-label="Agenda">
+              <div className="grid grid-cols-[repeat(7,minmax(0,1fr))] gap-1 sm:gap-1.5" role="grid" aria-label="Agenda">
                 {days.map((d) => {
                   const iso = toISO(d);
                   const list = byDay.get(iso) ?? [];
@@ -236,7 +236,7 @@ export default function AgendaPage() {
                       aria-selected={isSel}
                       aria-label={`${format(d, "EEEE d MMMM", { locale: nl })}, ${list.length} ${list.length === 1 ? "taak" : "taken"}, ${doneCount} gedaan`}
                       onClick={() => setSelected(iso)}
-                      className={`relative flex aspect-square min-h-14 flex-col items-center justify-between rounded-2xl p-1.5 text-sm transition-colors sm:aspect-auto sm:min-h-24 sm:items-stretch sm:p-2 ${
+                      className={`relative flex h-14 min-w-0 flex-col items-center justify-between overflow-hidden rounded-2xl p-1 text-sm transition-colors sm:h-auto sm:min-h-24 sm:items-stretch sm:p-2 ${
                         isSel ? "bg-ink text-cream" : "bg-cream hover:bg-sun/50"
                       } ${inMonth ? "" : "opacity-35"}`}
                     >
@@ -282,7 +282,7 @@ export default function AgendaPage() {
         ) : (
           <motion.section
             key="lijst"
-            className="mt-6 grid gap-8 lg:grid-cols-2"
+            className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}

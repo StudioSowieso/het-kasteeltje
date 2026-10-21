@@ -34,7 +34,7 @@ function Frame({ children }: { children: ReactNode }) {
 
       <motion.main
         key={pathname}
-        className="flex-1 pt-8"
+        className="min-w-0 flex-1 pt-8"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.28, ease: "easeOut" }}

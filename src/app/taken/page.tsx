@@ -53,7 +53,7 @@ export default function TakenPage() {
         </div>
       </section>
 
-      <section className="mt-10 grid gap-5 md:grid-cols-2">
+      <section className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
         {categories.map((cat, i) => {
           const list = tasks.filter((t) => t.category_id === cat.id);
           return (

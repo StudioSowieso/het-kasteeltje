@@ -22,6 +22,7 @@ html {
 
 body {
   min-height: 100dvh;
+  overflow-x: clip;
   background: var(--color-cream);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;

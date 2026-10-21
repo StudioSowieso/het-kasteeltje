@@ -42,7 +42,7 @@ export default function HuisgenotenPage() {
         </p>
       </section>
 
-      <section className="mt-10 grid gap-5 lg:grid-cols-[1fr_1.2fr]">
+      <section className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <form onSubmit={add} className="self-start rounded-[2.2rem] bg-rose p-6 sm:p-8">
           <h2 className="text-2xl font-bold">Nieuwe huisgenoot</h2>
           <label className="mt-5 block text-sm font-semibold">
@@ -106,7 +106,7 @@ export default function HuisgenotenPage() {
           </motion.button>
         </form>
 
-        <ul className="grid content-start gap-4 sm:grid-cols-2">
+        <ul className="grid grid-cols-1 content-start gap-4 sm:grid-cols-2">
           <AnimatePresence initial={false}>
             {members.map((m) => {
               const n = counts.get(m.id) ?? 0;
