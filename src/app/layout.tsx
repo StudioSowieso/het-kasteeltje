@@ -20,6 +20,11 @@ const instrument = Instrument_Serif({
 export const metadata: Metadata = {
   title: "Het Kasteeltje",
   description: "Het huishouden van Het Kasteeltje: wie poetst wat, en wanneer.",
+  appleWebApp: {
+    capable: true,
+    title: "Kasteeltje",
+    statusBarStyle: "default",
+  },
 };
 
 export const viewport: Viewport = {
