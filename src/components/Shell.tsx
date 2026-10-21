@@ -1,7 +1,7 @@
 "use client";
 
 import { CalendarDays, ListChecks, Users } from "lucide-react";
-import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import { MotionConfig, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
@@ -32,18 +32,15 @@ function Frame({ children }: { children: ReactNode }) {
         </Link>
 </header>
 
-      <AnimatePresence mode="wait">
-        <motion.main
-          key={pathname}
-          className="flex-1 pt-8"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.28, ease: "easeOut" }}
-        >
-          {children}
-        </motion.main>
-      </AnimatePresence>
+      <motion.main
+        key={pathname}
+        className="flex-1 pt-8"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.28, ease: "easeOut" }}
+      >
+        {children}
+      </motion.main>
 
       <nav
         aria-label="Hoofdnavigatie"
