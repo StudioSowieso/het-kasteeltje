@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Het Kasteeltje</string>
+    <string name="widget_label">Taken van vandaag</string>
+    <string name="widget_desc">Wat moet er nog gedaan worden in het kasteel?</string>
+</resources>

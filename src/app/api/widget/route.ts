@@ -56,6 +56,7 @@ export async function GET(request: Request) {
   const items = open.map((o) => ({
     title: o.task.title,
     category: o.category?.name ?? "",
+    color: o.category?.color ?? "#F9DB6D",
     date: o.date,
     overdue: o.date < todayISO,
   }));

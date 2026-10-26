@@ -36,3 +36,7 @@ Tabellen (prefix `kt_`): `kt_settings`, `kt_members`, `kt_categories`, `kt_tasks
 In KWGT: voeg een widget toe, plaats een Tekst-item en gebruik als formule
 `$wg("https://het-kasteeltje.vercel.app/api/widget", json, text)$`
 (voor het aantal: `.open`, voor de samenvatting: `.summary`).
+
+## Android-widget (eigen app)
+
+De map `android/` bevat een kleine Android-app met een beginschermwidget in dezelfde stijl als de webapp. GitHub Actions bouwt hem bij elke wijziging in `android/` en zet de APK op de release `widget-latest`. Installeren: download `het-kasteeltje-widget.apk` op je telefoon, sta installatie uit onbekende bronnen toe, en voeg daarna de widget "Taken van vandaag" toe vanuit je widgetkiezer.
