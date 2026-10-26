@@ -85,10 +85,10 @@ export default function AgendaPage() {
           <p className="text-sm font-semibold tracking-wide uppercase">
             {format(today, "EEEE d MMMM", { locale: nl })}
           </p>
-          <h1 className="mt-3 text-5xl leading-[0.95] font-bold tracking-tight sm:text-7xl">
-            Poetsen,
+          <h1 className="mt-3 text-5xl leading-[0.95] font-bold tracking-tight break-words sm:text-7xl">
+            Huishouden
             <br />
-            <span className="serif-italic text-6xl sm:text-8xl">samen.</span>
+            in ons <span className="serif-italic text-[2.9rem] sm:text-8xl">Kasteeltje</span>
           </h1>
           <p className="mt-5 max-w-md text-base/relaxed">
             {todayOcc.length === 0
