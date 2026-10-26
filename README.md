@@ -25,3 +25,14 @@ npm run dev
 ## Database
 
 Tabellen (prefix `kt_`): `kt_settings`, `kt_members`, `kt_categories`, `kt_tasks`, `kt_completions`. Alle tabellen hebben RLS aan.
+
+## Android-widget (KWGT)
+
+`/api/widget` geeft de openstaande taken van vandaag (plus achterstallige van de afgelopen 7 dagen):
+
+- `/api/widget` geeft JSON met `summary`, `open`, `text` en `items`
+- `/api/widget?format=text` geeft platte tekst, één taak per regel
+
+In KWGT: voeg een widget toe, plaats een Tekst-item en gebruik als formule
+`$wg("https://het-kasteeltje.vercel.app/api/widget", json, text)$`
+(voor het aantal: `.open`, voor de samenvatting: `.summary`).
