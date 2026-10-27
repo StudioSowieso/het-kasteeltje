@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Toaster } from "sonner";
 import { Gate } from "./Gate";
+import { Intro } from "./Intro";
 import { KasteelProvider, useKasteel } from "@/lib/store";
 
 const NAV = [
@@ -19,7 +20,8 @@ function Frame({ children }: { children: ReactNode }) {
   const { status } = useKasteel();
   const pathname = usePathname();
 
-  if (status !== "open") return <Gate />;
+  // Alleen bij een mislukte verbinding een foutscherm; tijdens het laden is de app meteen zichtbaar.
+  if (status === "locked") return <Gate />;
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col px-4 pt-5 pb-32 sm:px-8">
@@ -80,6 +82,7 @@ function Frame({ children }: { children: ReactNode }) {
 export function Shell({ children }: { children: ReactNode }) {
   return (
     <MotionConfig reducedMotion="user">
+      <Intro />
       <KasteelProvider>
         <Frame>{children}</Frame>
       </KasteelProvider>

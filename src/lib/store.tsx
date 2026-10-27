@@ -48,7 +48,7 @@ const CODE_KEY = "kt-code";
 
 export function KasteelProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<Status>("checking");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [lastError, setLastError] = useState("");
   const [members, setMembers] = useState<Member[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);

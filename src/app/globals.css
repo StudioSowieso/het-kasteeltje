@@ -63,3 +63,106 @@ select,
 textarea {
   font: inherit;
 }
+
+/* ---------- Intro: ramen lappen ---------- */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  animation: intro-out 0.45s ease 1.65s forwards;
+}
+.kt-seen .intro {
+  display: none;
+}
+.intro-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(100deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 40%),
+    rgba(251, 243, 226, 0.84);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  animation-fill-mode: both;
+}
+.intro-band.ltr {
+  animation-name: wipe-ltr;
+}
+.intro-band.rtl {
+  animation-name: wipe-rtl;
+}
+.intro-blade {
+  position: absolute;
+  top: 6%;
+  bottom: 6%;
+  left: 0;
+  width: 14px;
+  border-radius: 999px;
+  background: var(--color-ink);
+  box-shadow: 10px 0 18px rgba(255, 255, 255, 0.6);
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  animation-fill-mode: both;
+}
+.ltr .intro-blade {
+  animation-name: blade-ltr;
+}
+.rtl .intro-blade {
+  animation-name: blade-rtl;
+}
+.intro-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  animation: label-out 0.35s ease 0.85s forwards;
+}
+.intro-label p:first-child {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.intro-label p:last-child {
+  margin-top: 0.4rem;
+  font-size: clamp(2.2rem, 9vw, 3.6rem);
+  line-height: 1;
+}
+
+@keyframes wipe-ltr {
+  from { clip-path: inset(0 0 0 0); }
+  to { clip-path: inset(0 0 0 100%); }
+}
+@keyframes wipe-rtl {
+  from { clip-path: inset(0 0 0 0); }
+  to { clip-path: inset(0 100% 0 0); }
+}
+@keyframes blade-ltr {
+  0% { opacity: 0; transform: translateX(0); }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(calc(100vw - 14px)); }
+}
+@keyframes blade-rtl {
+  0% { opacity: 0; transform: translateX(calc(100vw - 14px)); }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(0); }
+}
+@keyframes label-out {
+  to { opacity: 0; transform: translateY(-10px); }
+}
+@keyframes intro-out {
+  to { opacity: 0; visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+}

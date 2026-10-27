@@ -35,7 +35,16 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="nl" className={`${bricolage.variable} ${instrument.variable}`}>
+    <html lang="nl" className={`${bricolage.variable} ${instrument.variable}`} suppressHydrationWarning>
+      <head>
+        <script
+          // Intro maar één keer per sessie: bij een volgende keer meteen de app.
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(sessionStorage.getItem('kt-intro'))document.documentElement.classList.add('kt-seen');else sessionStorage.setItem('kt-intro','1')}catch(e){}",
+          }}
+        />
+      </head>
       <body className="grain">
         <Shell>{children}</Shell>
       </body>
