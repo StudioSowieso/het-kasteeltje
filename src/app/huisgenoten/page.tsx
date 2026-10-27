@@ -25,7 +25,7 @@ export default function HuisgenotenPage() {
   }
 
   const counts = new Map<string, number>();
-  for (const c of completions) if (c.done_by) counts.set(c.done_by, (counts.get(c.done_by) ?? 0) + 1);
+  for (const c of completions) if (c.done_by && !c.skipped) counts.set(c.done_by, (counts.get(c.done_by) ?? 0) + 1);
   const max = Math.max(1, ...counts.values());
 
   return (

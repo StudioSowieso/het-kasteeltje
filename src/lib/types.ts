@@ -36,6 +36,7 @@ export type Completion = {
   due_date: string;
   done_by: string | null;
   done_at: string;
+  skipped: boolean;
 };
 
 export type Occurrence = {

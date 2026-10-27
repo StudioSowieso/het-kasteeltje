@@ -79,12 +79,14 @@ export function buildOccurrences(
   for (const task of tasks) {
     for (const date of occurrenceDates(task, from, to)) {
       const key = `${task.id}|${date}`;
+      const completion = completionMap.get(key);
+      if (completion?.skipped) continue; // overgeslagen: niet tonen
       out.push({
         key,
         date,
         task,
         category: catById.get(task.category_id),
-        completion: completionMap.get(key),
+        completion,
       });
     }
   }
