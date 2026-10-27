@@ -37,6 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="nl" className={`${bricolage.variable} ${instrument.variable}`} suppressHydrationWarning>
       <head>
+        <link rel="preload" as="image" href="/huis/hoek.jpg" />
+        <link rel="preload" as="image" href="/huis/voor.jpg" />
         <script
           // Intro maar één keer per sessie: bij een volgende keer meteen de app.
           dangerouslySetInnerHTML={{

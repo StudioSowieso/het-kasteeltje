@@ -64,55 +64,57 @@ textarea {
   font: inherit;
 }
 
-/* ---------- Intro: ramen lappen ---------- */
+/* ---------- Intro: de voordeur in ---------- */
 .intro {
   position: fixed;
   inset: 0;
   z-index: 70;
+  overflow: hidden;
+  background: #fbf3e2;
+  perspective: 1400px;
   pointer-events: none;
-  animation: intro-out 0.45s ease 1.65s forwards;
+  animation: intro-out 0.7s ease 2.95s forwards;
 }
 .kt-seen .intro {
   display: none;
 }
-.intro-band {
+.intro-shot {
   position: absolute;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-  background:
-    linear-gradient(100deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 40%),
-    rgba(251, 243, 226, 0.84);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  animation-duration: 0.55s;
-  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
-  animation-fill-mode: both;
+  inset: 0;
+  transform-origin: 45% 68%; /* de witte voordeur in de voorgevel-foto */
+  will-change: transform, opacity;
 }
-.intro-band.ltr {
-  animation-name: wipe-ltr;
+.intro-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 45% 68%;
 }
-.intro-band.rtl {
-  animation-name: wipe-rtl;
+/* 1. Hoekfoto: rustige duw-in met een lichte draai */
+.shot-hoek {
+  transform-origin: 50% 70%;
+  animation: hoek 1.5s cubic-bezier(0.3, 0.1, 0.4, 1) both;
 }
-.intro-blade {
+/* 2. Dwarsfade naar de voorgevel, dan recht op de deur af */
+.shot-voor {
+  opacity: 0;
+  animation:
+    voor-in 0.6s ease 0.8s forwards,
+    doorzoom 1.65s cubic-bezier(0.55, 0.05, 0.85, 0.4) 1.2s forwards;
+}
+.intro-vignette {
   position: absolute;
-  top: 6%;
-  bottom: 6%;
-  left: 0;
-  width: 14px;
-  border-radius: 999px;
-  background: var(--color-ink);
-  box-shadow: 10px 0 18px rgba(255, 255, 255, 0.6);
-  animation-duration: 0.55s;
-  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
-  animation-fill-mode: both;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(20, 17, 15, 0.35) 100%);
 }
-.ltr .intro-blade {
-  animation-name: blade-ltr;
-}
-.rtl .intro-blade {
-  animation-name: blade-rtl;
+/* 3. Licht door de deur */
+.intro-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 50%, #fffaf0 0%, #fbf3e2 45%, #f9db6d 130%);
+  animation: glow 0.6s ease 2.25s forwards;
 }
 .intro-label {
   position: absolute;
@@ -120,7 +122,7 @@ textarea {
   display: grid;
   place-content: center;
   text-align: center;
-  animation: label-out 0.35s ease 0.85s forwards;
+  animation: label-in 0.5s ease 2.35s both;
 }
 .intro-label p:first-child {
   font-size: 0.8rem;
@@ -130,32 +132,44 @@ textarea {
 }
 .intro-label p:last-child {
   margin-top: 0.4rem;
-  font-size: clamp(2.2rem, 9vw, 3.6rem);
+  font-size: clamp(2.4rem, 10vw, 4.2rem);
   line-height: 1;
 }
+.intro-skip {
+  position: absolute;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  pointer-events: auto;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fbf3e2;
+  background: rgba(20, 17, 15, 0.6);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
 
-@keyframes wipe-ltr {
-  from { clip-path: inset(0 0 0 0); }
-  to { clip-path: inset(0 0 0 100%); }
+@keyframes hoek {
+  from { transform: scale(1) rotateY(5deg); }
+  to { transform: scale(1.1) rotateY(0deg); }
 }
-@keyframes wipe-rtl {
-  from { clip-path: inset(0 0 0 0); }
-  to { clip-path: inset(0 100% 0 0); }
+@keyframes voor-in {
+  to { opacity: 1; }
 }
-@keyframes blade-ltr {
-  0% { opacity: 0; transform: translateX(0); }
-  8% { opacity: 1; }
-  92% { opacity: 1; }
-  100% { opacity: 0; transform: translateX(calc(100vw - 14px)); }
+@keyframes doorzoom {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(5vw, -18vh) scale(12); }
 }
-@keyframes blade-rtl {
-  0% { opacity: 0; transform: translateX(calc(100vw - 14px)); }
-  8% { opacity: 1; }
-  92% { opacity: 1; }
-  100% { opacity: 0; transform: translateX(0); }
+@keyframes glow {
+  to { opacity: 1; }
 }
-@keyframes label-out {
-  to { opacity: 0; transform: translateY(-10px); }
+@keyframes label-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  to { opacity: 1; transform: none; }
 }
 @keyframes intro-out {
   to { opacity: 0; visibility: hidden; }
