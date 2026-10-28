@@ -13,7 +13,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { makeClient } from "./supabase";
-import type { Category, Completion, Member, Task } from "./types";
+import type { Category, Completion, Member, Task, Todo } from "./types";
 
 type Status = "checking" | "locked" | "open";
 
@@ -29,6 +29,7 @@ type Ctx = {
   categories: Category[];
   tasks: Task[];
   completions: Completion[];
+  todos: Todo[];
   completionMap: Map<string, Completion>;
   unlock: (code: string) => Promise<boolean>;
   lock: () => void;
@@ -41,6 +42,10 @@ type Ctx = {
   removeCategory: (id: string) => Promise<void>;
   saveMember: (m: MemberInput) => Promise<void>;
   removeMember: (id: string) => Promise<void>;
+  addTodo: (title: string) => Promise<void>;
+  completeTodo: (id: string, memberId: string | null) => Promise<void>;
+  undoTodo: (id: string) => Promise<void>;
+  removeTodo: (id: string) => Promise<void>;
 };
 
 const KasteelContext = createContext<Ctx | null>(null);
@@ -54,24 +59,27 @@ export function KasteelProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [completions, setCompletions] = useState<Completion[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const clientRef = useRef<SupabaseClient | null>(null);
 
   const reload = useCallback(async () => {
     const sb = clientRef.current;
     if (!sb) return;
     setLoading(true);
-    const [m, c, t, d] = await Promise.all([
+    const [m, c, t, d, td] = await Promise.all([
       sb.from("kt_members").select("*").order("created_at"),
       sb.from("kt_categories").select("*").order("sort").order("name"),
       sb.from("kt_tasks").select("*").order("title"),
       sb.from("kt_completions").select("*").order("done_at", { ascending: false }).limit(5000),
+      sb.from("kt_todos").select("*").order("created_at"),
     ]);
-    const err = m.error ?? c.error ?? t.error ?? d.error;
+    const err = m.error ?? c.error ?? t.error ?? d.error ?? td.error;
     if (err) toast.error(`Laden mislukt: ${err.message}`);
     setMembers((m.data ?? []) as Member[]);
     setCategories((c.data ?? []) as Category[]);
     setTasks((t.data ?? []) as Task[]);
     setCompletions((d.data ?? []) as Completion[]);
+    setTodos((td.data ?? []) as Todo[]);
     setLoading(false);
   }, []);
 
@@ -117,6 +125,7 @@ export function KasteelProvider({ children }: { children: ReactNode }) {
     setCategories([]);
     setTasks([]);
     setCompletions([]);
+    setTodos([]);
     setStatus("locked");
   }, []);
 
@@ -145,6 +154,7 @@ export function KasteelProvider({ children }: { children: ReactNode }) {
       categories,
       tasks,
       completions,
+      todos,
       completionMap,
       unlock: open,
       lock,
@@ -170,8 +180,19 @@ export function KasteelProvider({ children }: { children: ReactNode }) {
       saveMember: (m) =>
         run((sb) => (m.id ? sb.from("kt_members").update(m).eq("id", m.id) : sb.from("kt_members").insert(m))),
       removeMember: (id) => run((sb) => sb.from("kt_members").delete().eq("id", id)),
+      addTodo: (title) => run((sb) => sb.from("kt_todos").insert({ title })),
+      completeTodo: (id, memberId) =>
+        run((sb) =>
+          sb
+            .from("kt_todos")
+            .update({ done: true, done_by: memberId, done_at: new Date().toISOString() })
+            .eq("id", id),
+        ),
+      undoTodo: (id) =>
+        run((sb) => sb.from("kt_todos").update({ done: false, done_by: null, done_at: null }).eq("id", id)),
+      removeTodo: (id) => run((sb) => sb.from("kt_todos").delete().eq("id", id)),
     };
-  }, [status, loading, lastError, members, categories, tasks, completions, open, lock, reload, run]);
+  }, [status, loading, lastError, members, categories, tasks, completions, todos, open, lock, reload, run]);
 
   return <KasteelContext.Provider value={value}>{children}</KasteelContext.Provider>;
 }

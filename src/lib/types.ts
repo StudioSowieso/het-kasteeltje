@@ -46,3 +46,12 @@ export type Occurrence = {
   category: Category | undefined;
   completion: Completion | undefined;
 };
+
+export type Todo = {
+  id: string;
+  title: string;
+  done: boolean;
+  done_by: string | null;
+  done_at: string | null;
+  created_at: string;
+};

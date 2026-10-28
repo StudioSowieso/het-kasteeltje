@@ -19,6 +19,7 @@ import { useMemo, useState } from "react";
 import { OccRow } from "@/components/OccRow";
 import { ProgressRing } from "@/components/ProgressRing";
 import { TaskSheet } from "@/components/TaskSheet";
+import { Todos } from "@/components/Todos";
 import { buildOccurrences, toISO } from "@/lib/recurrence";
 import { useKasteel } from "@/lib/store";
 import type { Occurrence } from "@/lib/types";
@@ -110,6 +111,8 @@ export default function AgendaPage() {
           </div>
         </div>
       </section>
+
+      <Todos />
 
       {/* Toolbar */}
       <section className="mt-8 flex flex-wrap items-center justify-between gap-4">
