@@ -64,6 +64,11 @@ export default function AgendaPage() {
   );
   const overdue = listOcc.filter((o) => o.date < todayISO && !o.completion);
   const upcoming = listOcc.filter((o) => o.date >= todayISO && (showDone || !o.completion));
+  const overdueByDay = useMemo(() => {
+    const map = new Map<string, Occurrence[]>();
+    for (const o of overdue) map.set(o.date, [...(map.get(o.date) ?? []), o]);
+    return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
+  }, [overdue]);
   const upcomingByDay = useMemo(() => {
     const map = new Map<string, Occurrence[]>();
     for (const o of upcoming) map.set(o.date, [...(map.get(o.date) ?? []), o]);
@@ -113,6 +118,41 @@ export default function AgendaPage() {
       </section>
 
       <Todos />
+
+      {/* Nog open van afgelopen dagen */}
+      <section aria-labelledby="overdue-title" className="mt-8 rounded-[2.2rem] bg-coral/40 p-5 sm:p-7">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 id="overdue-title" className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Nog <span className="serif-italic text-3xl sm:text-4xl">open</span> van afgelopen dagen
+            </h2>
+            <p className="mt-1 text-sm opacity-70">Taken van de laatste 14 dagen die nog niet zijn afgevinkt.</p>
+          </div>
+          <span className="rounded-full bg-ink px-3 py-1 text-sm font-semibold text-cream tabular-nums">
+            {overdue.length} open
+          </span>
+        </div>
+        {overdue.length === 0 ? (
+          <p className="serif-italic mt-4 text-2xl opacity-70">
+            {loading ? "Even kijken…" : "Niets blijven liggen. Mooi werk!"}
+          </p>
+        ) : (
+          <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+            {overdueByDay.map(([iso, list]) => (
+              <div key={iso} className="min-w-0">
+                <h3 className="text-sm font-semibold capitalize opacity-80">
+                  {format(parseISO(iso), "EEEE d MMMM", { locale: nl })}
+                </h3>
+                <ul className="mt-2 space-y-2">
+                  {list.map((o) => (
+                    <OccRow key={o.key} occ={o} onOpen={setOpenOcc} overdue />
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       {/* Toolbar */}
       <section className="mt-8 flex flex-wrap items-center justify-between gap-4">
@@ -291,18 +331,6 @@ export default function AgendaPage() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.22 }}
           >
-            {overdue.length > 0 && (
-              <div className="lg:col-span-2">
-                <h3 className="text-xl font-bold">
-                  Achterstallig <span className="serif-italic text-2xl">({overdue.length})</span>
-                </h3>
-                <ul className="mt-4 grid gap-3 md:grid-cols-2">
-                  {overdue.map((o) => (
-                    <OccRow key={o.key} occ={o} onOpen={setOpenOcc} overdue />
-                  ))}
-                </ul>
-              </div>
-            )}
             {upcomingByDay.map(([iso, list]) => (
               <div key={iso}>
                 <h3 className="text-xl font-bold capitalize">
@@ -315,7 +343,7 @@ export default function AgendaPage() {
                 </ul>
               </div>
             ))}
-            {upcomingByDay.length === 0 && overdue.length === 0 && (
+            {upcomingByDay.length === 0 && (
               <p className="serif-italic text-2xl opacity-70 lg:col-span-2">
                 Niets gepland de komende 30 dagen.
               </p>
